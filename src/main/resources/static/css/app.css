@@ -6,3 +6,43 @@ h1 { font-size:2rem; font-weight:750; letter-spacing:-0.04em; }
 .post-content { margin-top:1.5rem; white-space:pre-wrap; min-height:90px; line-height:1.8; }
 .table th { color:#64748b; font-size:.83rem; background:#f8fafc; }
 .table td, .table th { padding-top:1rem; padding-bottom:1rem; }
+
+/* 첨부파일 목록을 다른 영역과 구분하고 마우스를 올렸을 때 강조한다. */
+.attachment-item {
+    padding: 18px;
+    border-color: #e2e8f0;
+    transition: background-color 0.2s ease;
+}
+
+.attachment-item:hover {
+    background-color: #f8fafc;
+}
+
+.file-name {
+    color: #1e293b;
+}
+
+/* 파일 타입과 크기 정보를 한눈에 볼 수 있도록 배지 형태로 표시한다. */
+.file-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.file-type-badge,
+.file-size-badge {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 999px;
+}
+
+.file-type-badge {
+    color: #1d4ed8;
+    background-color: #dbeafe;
+}
+
+.file-size-badge {
+    color: #475569;
+    background-color: #e2e8f0;
+}
