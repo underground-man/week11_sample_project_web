@@ -42,19 +42,34 @@ File Upload
 
 MultipartFile은 무엇이며, 업로드된 파일은 어떤 과정을 거쳐 서버에 저장되는가?
 
+MultipartFile은 사용자가 업로드한 파일을 spring이 java에서 다룰수 있도록 표현한 객체이다.
+
+업로드된 파일이 서버에 저장되는 과정은 
+사용자 파일선택 -> form 파일 전송 -> multipartFile로 변환 -> controller가 파일 형식기타 검사 -> 
+UUID 저장 파일명 생성 -> 폴더에 실제 파일 저장 -> attachments 테이블에 파일정보 저장
+
 
 
 파일을 원본 이름 대신 UUID 기반 파일명으로 저장하는 이유는 무엇인가?
+
+파일이름 충돌과 위험한 파일명을 방지하기 위해서이다. 
+파일의 이름이 중복되더라도 UUID 기반 파일 저장시 충돌되지 않는다 
+
+
 File Download & Security
 
 파일 다운로드 시 Resource, ResponseEntity, Content-Disposition은 각각 어떤 역할을 하는가?
+
+resource: 서버에 저장된 파일을 Spring에서 읽고 전달하기 위한 객체이다
+ResponseEntity: 브라우저에 보낼 HTTP 응답 전체를 구성합니다.
+Content-DisPosition: 브라우저에게 파일을 어떻게 처리해야 하는지 알려주는 HTTP 헤더이다.
+
+
 파일 저장 과정에서 normalize()와 startsWith()를 사용하는 이유는 무엇인가?
-관련 소스파일 및 메서드명을 함께 명시
-각 문항은 2~4문장 정도로 간단히 설명
-② Line-by-Line Code Comments
 
-다음 3개 메서드의 핵심 코드에 직접 설명 주석을 작성합니다.
+FileStorageService.store()와 FileStorageService.load()에서 
+normalize()는 .이나 ..이 포함된 경로를 정리하여 실제 저장·조회 경로를 확인한다.
+startsWith(uploadDir)는 정리된 경로가 지정된 업로드 폴더 내부에 있는지 검사한다.
+이를 통해 파일이 uploads 폴더 밖에 저장되거나 조회되는 Path Traversal 공격을 방지한다.
 
-PostController: 게시글 작성 및 파일 업로드 요청 처리
-FileStorageService.store(): 파일 검증, 저장 경로 생성 및 실제 파일 저장
-AttachmentController.download(): 파일 조회 및 HTTP 다운로드 응답 처리
+hmentController.download(): 파일 조회 및 HTTP 다운로드 응답 처리
