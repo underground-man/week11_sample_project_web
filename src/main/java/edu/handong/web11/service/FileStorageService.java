@@ -29,16 +29,29 @@ public class FileStorageService {
     }
 
     public Attachment store(MultipartFile file) {
+
+        // 빈파일은 업로드 거부 하는 VALIDITY같은거
         if (file.isEmpty()) throw new IllegalArgumentException("빈 파일은 업로드할 수 없습니다.");
+
+        // 업로드시 파일명을 변수에 저장
         String original = file.getOriginalFilename();
+        //다시 파일명이 없는지, 혹은 문자 포함시 거부
         if (original == null || original.isBlank() || original.contains("/") || original.contains("\\") || original.contains(".."))
             throw new IllegalArgumentException("잘못된 파일 이름입니다.");
+        // 지나치게 긴 파일명으로 인한 문제 방지
         if (original.length() > 240) throw new IllegalArgumentException("파일 이름이 너무 깁니다.");
+        //마지막 점으 기준으로 확장자 추출
         int dot = original.lastIndexOf('.');
+        //확장자를 JPG,jpg등 대소문자 구분을 없애 검사한다
         String ext = dot < 0 ? "" : original.substring(dot + 1).toLowerCase(Locale.ROOT);
+        // 이상한 파일형식 거부
         if (!ALLOWED.contains(ext)) throw new IllegalArgumentException("허용 형식: jpg, jpeg, png, gif, pdf, txt");
+        //사이즈가 너무 크면 거부
         if (file.getSize() > 10L * 1024 * 1024) throw new IllegalArgumentException("파일은 10MB 이하만 가능합니다.");
+        //같은 워본 파일명이 업로드 되어도 충돌하지 않도록 UUID 저장명을 생성한다.
         String stored = UUID.randomUUID() + "." + ext;
+
+        //그 긴거...
         Path target = uploadDir.resolve(stored).normalize();
         if (!target.startsWith(uploadDir)) throw new IllegalArgumentException("잘못된 파일 경로입니다.");
         try (InputStream input = file.getInputStream()) {
@@ -53,7 +66,10 @@ public class FileStorageService {
             };
             return new Attachment(original, stored, contentType, file.getSize());
         } catch (IOException e) {
-            try { Files.deleteIfExists(target); } catch (IOException ignored) {}
+            try {
+                Files.deleteIfExists(target);
+            } catch (IOException ignored) {
+            }
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 저장 실패", e);
         }
     }

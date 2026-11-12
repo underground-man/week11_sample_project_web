@@ -37,11 +37,22 @@ public class PostController {
         return "posts/form";
     }
 
+
+
     @PostMapping("/posts")
-    public String create(@Valid @ModelAttribute("postForm") PostForm form, BindingResult errors,
-                         @RequestParam(name = "files", required = false) List<MultipartFile> files) {
+    public String create(
+            //FORM을 입력값으로 받고 POSTFORM객체에 바인딩하고 검증한다.
+            @Valid @ModelAttribute("postForm") PostForm form,
+            //오류를 전달받기 위한 변수
+            BindingResult errors, @RequestParam(name = "files", required = false) List<MultipartFile> files) {
+
+        // 검증 실패시 저장하지 않고 작성화면을 반환한다.
         if (errors.hasErrors()) return "posts/form";
+
+
+        //삼항 연산자를 사용해서 파일 선택되지 않은 경우 NULL, 선택될시 게시글정보, 파일목록을 반환하고 저장된 게시글 ID를 SERVICE에 건낸다
         Long id = posts.create(form, files == null ? List.of() : files);
+        //저장결과를 보여주기 위해 게시글 상세 화면으로 이동한다.
         return "redirect:/posts/" + id;
     }
 
@@ -63,8 +74,7 @@ public class PostController {
     }
 
     @PostMapping("/posts/{id}/edit")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("postForm") PostForm form, BindingResult errors,
-                         Model model) {
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("postForm") PostForm form, BindingResult errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("postId", id);
             return "posts/form";

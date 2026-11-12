@@ -19,12 +19,22 @@ public class AttachmentController {
     }
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> download(@PathVariable Long id) {
+
+        //해당 ID가 없으면 404HTTP 오류 발생
+
+
         Attachment file = attachments.findById(id).orElseThrow(() ->
             new ResponseStatusException(HttpStatus.NOT_FOUND, "첨부파일이 없습니다."));
+
+        //UUID 저장명으로 실제파일을 불러온다.
         Resource resource = storage.load(file);
+
+        //서버의 UUID 저장명이 아닌 사용자가 업로드한 원본 파일명을 사용한다
         String disposition = ContentDisposition.attachment()
             .filename(file.getOriginalFilename(), StandardCharsets.UTF_8)
             .build().toString();
+
+        //상태코드, 파일형식, 다운로드 파일명과 실제 파일 데이터를 HTTP 응답으로 구성한다.
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .header(HttpHeaders.CONTENT_DISPOSITION, disposition)
