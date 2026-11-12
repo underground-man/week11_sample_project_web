@@ -73,3 +73,56 @@ startsWith(uploadDir)는 정리된 경로가 지정된 업로드 폴더 내부�
 이를 통해 파일이 uploads 폴더 밖에 저장되거나 조회되는 Path Traversal 공격을 방지한다.
 
 hmentController.download(): 파일 조회 및 HTTP 다운로드 응답 처리
+
+Step 5. Testing & Deployment
+
+### Local Testing
+
+ 01. Sample Project 초기 실행 화면
+
+
+
+![Sample Project 초기 실행 화면](<img/img.png>)
+
+ 02. 파일 업로드
+
+
+![파일 선택 화면](<img/스크린샷 2026-11-12 184828.png>)
+
+
+![파일 업로드 성공 화면](<img/스크린샷 2026-11-12 184832.png>)
+
+
+![게시글 목록 반영 화면](<img/스크린샷 2026-11-12 185106.png>)
+
+03. 파일 다운로드
+
+
+
+![파일 다운로드 성공 화면](<img/스크린샷 2026-11-12 184846.png>)
+
+04. 이미지 미리보기
+
+
+
+![이미지 미리보기 구현 전](<img/스크린샷 2026-11-12 185126.png>)
+
+
+
+![이미지 미리보기 실행 화면](<img/스크린샷 2026-11-12 224646.png>)
+
+게시글 CRUD 확인
+
+
+
+![게시글 삭제 확인 화면](<img/스크린샷 2026-11-12 184850.png>)
+
+
+
+GitHub & Render Deployment
+
+- GitHub Repository: https://github.com/underground-man/week11_sample_project_web
+- Render Deployment URL: 
+- GitHub Push 후 Auto Deploy: 배포 후 확인 결과 입력
+
+Render 환경에서는 DB 접속 정보를 환경변수로 설정하고, 배포 후 게시글 CRUD, 파일 업로드·다운로드와 이미지 미리보기 기능을 다시 확인한다.

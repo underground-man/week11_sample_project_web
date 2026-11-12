@@ -9,9 +9,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.nio.charset.StandardCharsets;
 
+
+import java.util.Set;
+
 @RestController
 @RequestMapping("/attachments")
 public class AttachmentController {
+
+
+    private static final Set <String> PREVIEWABLE_IMAGE_TYPES = Set.of("image/jpeg","image/png","image/gif");
+
+
     private final AttachmentRepository attachments;
     private final FileStorageService storage;
     public AttachmentController(AttachmentRepository attachments, FileStorageService storage) {
@@ -41,4 +49,20 @@ public class AttachmentController {
             .body(resource);
     }
     // STUDENT TODO: GET /attachments/{id}/view (image preview).
+    @GetMapping("/{id}/view")
+    public ResponseEntity<Resource> view(@PathVariable Long id){
+        Attachment file = attachments.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"첨부파일이 없습니다."));
+
+        if (!PREVIEWABLE_IMAGE_TYPES.contains(file.getContentType())){
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"이미지 파일만 미리보기 할 수 있습니다.");
+        }
+
+        Resource resource = storage.load(file);
+
+        MediaType mediaType = MediaType.parseMediaType(file.getContentType());
+
+
+
+        return ResponseEntity.ok().contentType(mediaType).body(resource);
+    }
 }
