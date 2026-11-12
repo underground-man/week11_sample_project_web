@@ -124,5 +124,4 @@ GitHub & Render Deployment
 - GitHub Repository: https://github.com/underground-man/week11_sample_project_web
 - Render Deployment URL: 
 - GitHub Push 후 Auto Deploy: 배포 후 확인 결과 입력
-
-Render 환경에서는 DB 접속 정보를 환경변수로 설정하고, 배포 후 게시글 CRUD, 파일 업로드·다운로드와 이미지 미리보기 기능을 다시 확인한다.
+- 
